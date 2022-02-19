@@ -213,3 +213,23 @@ class UserApi(object):
                            data_type=Transaction).set_method(method=self.get_transaction_between_two_users,
                                                              kwargs={"user_id_one": user_id_one,
                                                                              "user_id_two": user_id_two})
+    def get_identities(self, callback=None) -> Union[User, None]:
+        """
+        Get user identities. ie business and personal account information
+        :param callback: <function>
+        :return user: <User> <NoneType>
+        """
+
+        # Prepare the request
+        resource_path = '/users/identities'
+        wrapped_callback = wrap_callback(callback=callback,
+                                         data_type=User)
+        # Make the request
+        response = self.__api_client.call_api(resource_path=resource_path,
+                                              method='GET',
+                                              callback=wrapped_callback)
+        # Return None if threaded
+        if callback:
+            return
+
+        return deserialize(response=response, data_type=User)
